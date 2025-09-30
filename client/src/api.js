@@ -1,5 +1,5 @@
 // src/api.js
-const BASE_URL = import.meta.env.VITE_API_URL
+const BASE_URL = "http://localhost:4040/api"
 
 // Send verification code
 export async function sendVerificationCode(email) {
