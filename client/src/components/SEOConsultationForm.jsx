@@ -43,7 +43,7 @@ const SEOConsultationForm = () => {
   const calendlyRef = useRef(null);
 
   const totalSteps = 7;
-  const BASE_URL = "http://localhost:4040/api"
+  const BASE_URL = "https://seo-consultation-form-khan-it.onrender.com/api"
 
 useEffect(() => {
   if (currentStep === 6 && calendlyRef.current) {
@@ -101,7 +101,7 @@ useEffect(() => {
     } catch (error) {
       console.error('Auto-save failed:', error);
     }
-  }, 60000); // Every 60 seconds
+  }, 120000); // Every 60 seconds
 
   return () => clearInterval(intervalId);
 }, [formData, currentStep]);
