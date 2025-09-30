@@ -151,10 +151,8 @@ useEffect(() => {
   };
 
   const validatePhone = (phone) => {
-    // Remove spaces and check if it matches the pattern +[country code][number]
-    const cleanPhone = phone.replace(/\s+/g, '');
     const phoneRegex = /^\+\d{10,15}$/;
-    return phoneRegex.test(cleanPhone);
+    return phoneRegex.test(phone);
   };
 
   const validateWebsiteUrl = (url) => {
@@ -483,9 +481,10 @@ Additional Notes: ${formData.additionalNotes || 'None'}
               <div className="mb-3">
                 <select
                   className="form-select"
-                  value={formData.countryCode}
+                  value={formData.phone.startsWith('+') ? formData.phone.split(' ')[0] : ''}
                   onChange={(e) => {
-                    handleInputChange("countryCode", e.target.value);
+                    const selectedCode = e.target.value;
+                    handleInputChange("phone", `${selectedCode}`);
                   }}
                 >
                   <option value="">Select Country</option>
@@ -502,17 +501,11 @@ Additional Notes: ${formData.additionalNotes || 'None'}
                 <input
                   type="tel"
                   className={`form-control ${errors.phone ? "is-invalid" : ""}`}
-                  placeholder="Phone Number (e.g., 1234567890)"
-                  value={formData.phoneNumber}
-                  onChange={(e) => {
-                    const newNumber = e.target.value.replace(/[^\d]/g, '');
-                    handleInputChange("phoneNumber", newNumber);
-                  }}
+                  placeholder="Phone Number"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
                   required
                 />
-                {formData.countryCode && (
-                  <small className="text-muted">Full number: {formData.countryCode}{formData.phoneNumber}</small>
-                )}
                 {errors.phone && (
                   <div className="invalid-feedback">{errors.phone}</div>
                 )}
