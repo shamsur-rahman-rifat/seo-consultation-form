@@ -1,5 +1,5 @@
 // src/api.js
-const BASE_URL = "http://localhost:4040/api"
+const BASE_URL = "https://seo-consultation-form-khan-it.onrender.com/api"
 
 // Send verification code
 export async function sendVerificationCode(email) {
