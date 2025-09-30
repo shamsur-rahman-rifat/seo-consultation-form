@@ -9,7 +9,8 @@ const SEOConsultationForm = () => {
     fullName: '',
     email: '',
     // Step 2
-    phone: '',
+    countryCode: '',
+    phoneNumber: '',
     confirmEmail: '',
     communicationConsent: false,
     // Step 3
@@ -83,7 +84,8 @@ useEffect(() => {
       await sendPartialFormData({
         name: formData.fullName,
         email: formData.email,
-        phone: formData.phone,
+        countryCode: formData.countryCode,
+        phone: formData.phoneNumber,
         companyName: formData.companyName,
         websiteUrl: formData.websiteUrl,
         noWebsite: formData.noWebsite,
@@ -114,7 +116,8 @@ useEffect(() => {
       const data = JSON.stringify({
         name: formData.fullName,
         email: formData.email,
-        phone: formData.phone,
+        countryCode: formData.countryCode,
+        phone: formData.phoneNumber,
         companyName: formData.companyName,
         websiteUrl: formData.websiteUrl,
         noWebsite: formData.noWebsite,
@@ -150,10 +153,11 @@ useEffect(() => {
     return emailRegex.test(email);
   };
 
-  const validatePhone = (phone) => {
-    const phoneRegex = /^\+\d{10,15}$/;
-    return phoneRegex.test(phone);
-  };
+const validatePhone = (countryCode, phoneNumber) => {
+  const fullPhone = `${countryCode}${phoneNumber}`;
+  const phoneRegex = /^\+\d{10,15}$/;
+  return phoneRegex.test(fullPhone);
+};
 
   const validateWebsiteUrl = (url) => {
     try {
@@ -175,8 +179,9 @@ useEffect(() => {
         break;
 
       case 2:
-        if (!formData.phone) newErrors.phone = 'Phone number is required';
-        else if (!validatePhone(formData.phone)) newErrors.phone = 'Please enter phone with country code (+880...)';
+        if (!formData.countryCode) newErrors.phone = "Please select your country";
+        if (!formData.phoneNumber) newErrors.phone = 'Phone number is required';
+        else if (!validatePhone(formData.countryCode, formData.phoneNumber)) {newErrors.phone = "Enter a valid phone number with country code"};
         if (!formData.communicationConsent) newErrors.communicationConsent = 'You must agree to receive communications';
         break;
 
@@ -300,11 +305,12 @@ const handleSubmit = async () => {
 
   setIsSubmitting(true);
   try {
+    const fullPhone = `${formData.countryCode}${formData.phoneNumber}`;
     const response = await sendContactEmail({
       name: formData.fullName,
       email: formData.email,
       message: `
-Phone: ${formData.phone}
+Phone: ${fullPhone}
 Company: ${formData.companyName}
 Website: ${formData.websiteUrl || 'N/A'}
 Services: ${formData.services.join(', ')}
@@ -477,39 +483,35 @@ Additional Notes: ${formData.additionalNotes || 'None'}
                 <small className="text-muted">This is the email you verified in Step 1</small>
               </div>
 
-              {/* Country selector */}
-              <div className="mb-3">
-                <select
-                  className="form-select"
-                  value={formData.phone.startsWith('+') ? formData.phone.split(' ')[0] : ''}
-                  onChange={(e) => {
-                    const selectedCode = e.target.value;
-                    handleInputChange("phone", `${selectedCode}`);
-                  }}
-                >
-                  <option value="">Select Country</option>
-                  {countryOptions.map((c) => (
-                    <option key={c.code} value={c.code}>
-                      {c.name} ({c.code})
-                    </option>
-                  ))}
-                </select>
-              </div>
+{/* Country selector */}
+<div className="mb-3">
+  <select
+    className="form-select"
+    value={formData.countryCode}
+    onChange={(e) => handleInputChange("countryCode", e.target.value)}
+  >
+    <option value="">Select Country</option>
+    {countryOptions.map((c) => (
+      <option key={c.code} value={c.code}>
+        {c.name} ({c.code})
+      </option>
+    ))}
+  </select>
+</div>
 
-              {/* Phone number input */}
-              <div className="mb-3">
-                <input
-                  type="tel"
-                  className={`form-control ${errors.phone ? "is-invalid" : ""}`}
-                  placeholder="Phone Number"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange("phone", e.target.value)}
-                  required
-                />
-                {errors.phone && (
-                  <div className="invalid-feedback">{errors.phone}</div>
-                )}
-              </div>
+{/* Phone number input */}
+<div className="input-group mb-3">
+  <span className="input-group-text">{formData.countryCode || "+--"}</span>
+  <input
+    type="tel"
+    className={`form-control ${errors.phone ? "is-invalid" : ""}`}
+    placeholder="Phone Number"
+    value={formData.phoneNumber}
+    onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
+    required
+  />
+  {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
+</div>
 
               {/* Consent checkbox */}
               <div className="form-check mb-3">
