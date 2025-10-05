@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { sendContactEmail, sendVerificationCode, verifyCode, sendPartialFormData } from '../controller/mailController.js'
-import { createCalendlyLink, getAvailableTimes } from '../controller/calendlyController.js'
+import { getEventTypes, getAvailableTimes, createCalcomBooking } from '../controller/bookingController.js'
 
 const router=Router()
 
@@ -13,8 +13,10 @@ router.post('/verifyCode', verifyCode);
 
 // Calendly Routes
 
-router.post('/createCalendlyLink', createCalendlyLink);
-router.post('/getAvailableTimes', getAvailableTimes);
+router.get('/getEventTypes', getEventTypes);
+router.get('/getAvailableTimes', getAvailableTimes);
+router.post('/createCalcomBooking', createCalcomBooking);
+
 
 
 export default router;
