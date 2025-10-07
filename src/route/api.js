@@ -11,7 +11,7 @@ router.post('/sendPartialFormData', sendPartialFormData);
 router.post('/sendVerificationCode', sendVerificationCode);
 router.post('/verifyCode', verifyCode);
 
-// Calendly Routes
+// Booking Routes
 
 router.get('/getEventTypes', getEventTypes);
 router.get('/getAvailableTimes', getAvailableTimes);

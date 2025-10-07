@@ -9,28 +9,35 @@ import { resolve } from 'path';
 import router from './src/route/api.js';
 
 dotenv.config();
-const app=new express();
+const app = new express();
 const __dirname = resolve();
 
 // Middleware
 
-app.use(cors());
+// Open CORS Policy - Allow any origin
+app.use(cors({
+  origin: '*',  // Allow all domains
+  methods: ['GET', 'POST'],  // Allow only necessary methods (GET, POST for form submission)
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
 app.use(hpp());
 app.use(json({ limit: "20MB" }));
-app.use(urlencoded({extended: true}));
-const limiter = rateLimit({ windowMs: 15*60*1000, max: 3000 });
+app.use(urlencoded({ extended: true }));
+
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 3000 });
 app.use(limiter);
+
 app.use(
   helmet({
     contentSecurityPolicy: {
       useDefaults: true,
       directives: {
-        // keep Helmet's defaults
         ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-        // allow Calendly
         "script-src": ["'self'", "https://assets.calendly.com"],
-        "frame-src": ["'self'", "https://calendly.com", "https://assets.calendly.com"],
+        "frame-src": ["'self'", "https://calendly.com", "https://assets.calendly.com"], // Allow these if you use Calendly or other external services
         "style-src": ["'self'", "'unsafe-inline'", "https://assets.calendly.com"],
+        "frame-ancestors": ["'self'", "*"],  // Allow anyone to embed the form in an iframe
       },
     },
   })
