@@ -34,12 +34,13 @@ app.use(
       useDefaults: true,
       directives: {
         ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "frame-ancestors": [],  // <-- empty array removes this directive entirely
         "script-src": ["'self'", "https://assets.calendly.com"],
-        "frame-src": ["'self'", "https://calendly.com", "https://assets.calendly.com"], // Calendly or other services
+        "frame-src": ["'self'", "https://calendly.com", "https://assets.calendly.com"],
         "style-src": ["'self'", "'unsafe-inline'", "https://assets.calendly.com"],
       },
     },
-    frameguard: false,
+    frameguard: false, // disable X-Frame-Options header
   })
 );
 
