@@ -13,8 +13,8 @@ router.post('/verifyCode', verifyCode);
 
 // Booking Routes
 
-router.get('/getEventTypes', getEventTypes);
-router.get('/getAvailableTimes', getAvailableTimes);
+router.post('/getEventTypes', getEventTypes);
+router.post('/getAvailableTimes', getAvailableTimes);
 router.post('/createCalcomBooking', createCalcomBooking);
 
 
