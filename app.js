@@ -2,7 +2,7 @@
 import dotenv from 'dotenv';
 import express, { json, urlencoded } from 'express';
 import rateLimit from 'express-rate-limit';
-// import helmet from 'helmet';
+import helmet from 'helmet';
 import cors from 'cors';
 import hpp from 'hpp';
 import { resolve } from 'path';
@@ -28,23 +28,20 @@ app.use(urlencoded({ extended: true }));
 const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 3000 });
 app.use(limiter);
 
-// app.use(
-//   helmet({
-//     contentSecurityPolicy: {
-//       useDefaults: true,
-//       directives: {
-//         ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-//         "script-src": ["'self'", "https://assets.calendly.com"],
-//         "frame-src": ["'self'", "https://calendly.com", "https://assets.calendly.com"], // Calendly or other services
-//         "style-src": ["'self'", "'unsafe-inline'", "https://assets.calendly.com"],
-//         // Allow embedding from your own origin plus ANY HTTP or HTTPS domain
-//         "frame-ancestors": ["'self'", "http:", "https:"],
-//       },
-//     },
-//     // Disable frameguard so it doesn't send X-Frame-Options header that blocks iframe embedding
-//     frameguard: false,
-//   })
-// );
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      useDefaults: true,
+      directives: {
+        ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+        "script-src": ["'self'", "https://assets.calendly.com"],
+        "frame-src": ["'self'", "https://calendly.com", "https://assets.calendly.com"], // Calendly or other services
+        "style-src": ["'self'", "'unsafe-inline'", "https://assets.calendly.com"],
+      },
+    },
+    frameguard: false,
+  })
+);
 
 
 app.use('/api/sendPartialFormData', express.text({ type: '*/*' }), (req, res, next) => {
